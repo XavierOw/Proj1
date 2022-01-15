@@ -19,10 +19,11 @@ function draw()
 {
     background('black');
 
-    document.getElementById("square_side").innerHTML = "The width and height of the square is " + difference + "px";
+    document.getElementById("square_side").innerHTML = "The width and height of the font is " + difference + "px";
         fill('green');
         stroke('red');
-        square(noseX, noseY, difference);
+        textSize(difference);
+        text("font size", 50, 400);
 }
 
 function modelLoaded()
@@ -30,3 +31,19 @@ function modelLoaded()
     console.log('Posenet')
 }
 
+function gotPoses(numbers)
+{
+    if(numbers.length >0)
+    {
+        console.log(numbers)
+        noseX = numbers[0].pose.nose.x;
+        noseY = numbers[0].pose.nose.y;
+        console.log("noseX = " + noseX + "noseY = " + noseY)
+
+        leftWristX = numbers[0].pose.leftWrist.x;
+        rightWristX = numbers[0].pose.rightWrist.x;
+        difference = floor(leftWristX - rightWristX);
+
+        console.log("lefWrist =" + leftWristX + "rightWristX =" + rightWristX + "difference =" + difference)
+    }
+}
