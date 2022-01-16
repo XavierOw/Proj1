@@ -1,49 +1,56 @@
-
-noseX=0;
-noseY=0;
-difference=0;
-rightWristX=0;
+song=""
 leftWristX=0;
+rightWristY = 0;
+leftWristY=0;
+rightWristX=0;
+
+function preload()
+{
+    song = loadSound("music.mp3");
+}
+
 function setup()
 {
-    video = createCapture(VIDEO);
-    video.size(550, 500);
+    canvas = createCanvas(600, 500);
+    canvas.center();
 
-    canvas = createCanvas(550, 550);
-    canvas.position(560, 150);
-
+    video =createCapture(VIDEO);
+    video.hide();
     
+    poseNet=ml5.poseNet(video, modelLoaded);
+    poseNet.on('pose', gotPoses);
 }
 
-function draw() 
-{
-    background('black');
-
-    document.getElementById("square_side").innerHTML = "The width and height of the font is " + difference + "px";
-        fill('green');
-        stroke('red');
-        textSize(difference);
-        text("font size", 50, 400);
-}
-
-function modelLoaded()
-{
-    console.log('Posenet')
-}
-
-function gotPoses(numbers)
-{
-    if(numbers.length >0)
+    function modelLoaded()
     {
-        console.log(numbers)
-        noseX = numbers[0].pose.nose.x;
-        noseY = numbers[0].pose.nose.y;
-        console.log("noseX = " + noseX + "noseY = " + noseY)
+        console.log('The pose is seen')
+    }
 
-        leftWristX = numbers[0].pose.leftWrist.x;
-        rightWristX = numbers[0].pose.rightWrist.x;
-        difference = floor(leftWristX - rightWristX);
 
-        console.log("lefWrist =" + leftWristX + "rightWristX =" + rightWristX + "difference =" + difference)
+function draw()
+{
+    image(video, 0, 0, 600, 500);
+}
+
+function play()
+{
+    song.play();
+    song.setVolume(1);
+    song.rate(1);
+
+}
+
+function gotPoses(results)
+{
+    if(results.length>0)
+    {
+        console.log(results);
+        leftWristX= results[0].pose.leftWrist.x;
+        leftWristY= results[0].pose.leftWrist.y;
+        console.log("leftWristX =" + leftWristX +"leftWristY"+ leftWristY)
+
+        rightWristX= results[0].pose.rightWrist.x;
+        rightWristY= results[0].pose.rightWrist.y;
+        console.log("rightWristX =" + rightWristX +"rightWristY"+ rightWristY)
     }
 }
