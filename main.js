@@ -1,56 +1,50 @@
-song=""
-leftWristX=0;
-rightWristY = 0;
-leftWristY=0;
+
+noseX=0;
+noseY=0;
+difference=0;
 rightWristX=0;
-
-function preload()
-{
-    song = loadSound("music.mp3");
-}
-
+leftWristX=0;
 function setup()
 {
-    canvas = createCanvas(600, 500);
-    canvas.center();
+    video = createCapture(VIDEO);
+    video.size(550, 500);
 
-    video =createCapture(VIDEO);
-    video.hide();
-    
-    poseNet=ml5.poseNet(video, modelLoaded);
+    canvas = createCanvas(550, 550);
+    canvas.position(560, 150);
+
+    poseNet= ml5.poseNet(video, modelLoaded);
     poseNet.on('pose', gotPoses);
 }
 
-    function modelLoaded()
-    {
-        console.log('The pose is seen')
-    }
-
-
-function draw()
+function draw() 
 {
-    image(video, 0, 0, 600, 500);
+    background('black');
+
+    document.getElementById("square_side").innerHTML = "The width and height of the font is " + difference + "px";
+        fill('green');
+        stroke('red');
+        textSize(difference);
+        text("font size", 50, 400);
 }
 
-function play()
+function modelLoaded()
 {
-    song.play();
-    song.setVolume(1);
-    song.rate(1);
-
+    console.log('Posenet')
 }
 
-function gotPoses(results)
+function gotPoses(numbers)
 {
-    if(results.length>0)
+    if(numbers.length >0)
     {
-        console.log(results);
-        leftWristX= results[0].pose.leftWrist.x;
-        leftWristY= results[0].pose.leftWrist.y;
-        console.log("leftWristX =" + leftWristX +"leftWristY"+ leftWristY)
+        console.log(numbers)
+        noseX = numbers[0].pose.nose.x;
+        noseY = numbers[0].pose.nose.y;
+        console.log("noseX = " + noseX + "noseY = " + noseY)
 
-        rightWristX= results[0].pose.rightWrist.x;
-        rightWristY= results[0].pose.rightWrist.y;
-        console.log("rightWristX =" + rightWristX +"rightWristY"+ rightWristY)
+        leftWristX = numbers[0].pose.leftWrist.x;
+        rightWristX = numbers[0].pose.rightWrist.x;
+        difference = floor(leftWristX - rightWristX);
+
+        console.log("lefWrist =" + leftWristX + "rightWristX =" + rightWristX + "difference =" + difference)
     }
 }
